@@ -1,6 +1,9 @@
 function rgb2hsl(r, g, b) {
-  const min = Math.min(r, g, b);
-  const max = Math.max(r, g, b);
+  const r1 = r / 255;
+  const g1 = g / 255;
+  const b1 = b / 255;
+  const min = Math.min(r1, g1, b1);
+  const max = Math.max(r1, g1, b1);
   const d = max - min;
   let h = 0;
   let s = 0;
@@ -8,9 +11,9 @@ function rgb2hsl(r, g, b) {
   if (d) {
     s = l < 0.5 ? d / (max + min) : d / (2 - max - min);
     switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      default: h = (r - g) / d + 4; break;
+      case r1: h = (g1 - b1) / d + (g1 < b1 ? 6 : 0); break;
+      case g1: h = (b1 - r1) / d + 2; break;
+      default: h = (r1 - g1) / d + 4; break;
     }
     h *= 60;
   }
