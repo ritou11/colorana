@@ -20,9 +20,27 @@ class App extends Component {
     return (
       <div className="App">
         <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
-        <Histogram width={400} height={200} data={_.map(this.state.data, (d) => d[0])}/>
-        <Histogram width={400} height={200} data={_.map(this.state.data, (d) => d[1])}/>
-        <Histogram width={400} height={200} data={_.map(this.state.data, (d) => d[2])}/>
+        <Histogram settings={{
+          width: 600,
+          height: 300,
+          ticks: 20,
+          xmin: 0,
+          xmax: 360,
+        }} data={_.map(this.state.data, (d) => d[0])}/>
+        <Histogram settings={{
+          width: 600,
+          height: 300,
+          ticks: 20,
+          xmin: 0,
+          xmax: 1,
+        }} data={_.map(this.state.data, (d) => d[1])}/>
+        <Histogram settings={{
+          width: 600,
+          height: 300,
+          ticks: 20,
+          xmin: 0,
+          xmax: 1,
+        }} data={_.map(this.state.data, (d) => d[2])}/>
       </div>
     );
   }
