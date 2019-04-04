@@ -8,8 +8,10 @@ class Histogram extends Component {
     this.defaultSettings = {
       width: 400,
       height: 200,
-      ticks: 10,
+      xticks: 10,
+      yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
+      color: 'blue',
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
   }
@@ -39,19 +41,20 @@ class Histogram extends Component {
   }
 
   drawChart() {
-    const widthAval = this.settings.width - this.settings.margin.left - this.settings.margin.right;
-    const heightAval = this.settings.height - this.settings.margin.top - this.settings.margin.bottom;
+    const sts = this.settings;
+    const widthAval = sts.width - sts.margin.left - sts.margin.right;
+    const heightAval = sts.height - sts.margin.top - sts.margin.bottom;
 
     if (!this.props.data || !this.props.data.length) return;
 
-    const maxX = this.settings.xmax || _.max(this.props.data);
-    const minX = this.settings.xmin || _.min(this.props.data);
+    const maxX = sts.xmax || _.max(this.props.data);
+    const minX = sts.xmin || _.min(this.props.data);
     const xScale = d3.scaleLinear()
       .domain([minX, maxX])
       .range([0, widthAval]);
     const histogram = d3.histogram()
       .domain([minX, maxX])
-      .thresholds(this.settings.ticks);
+      .thresholds(xScale.ticks(sts.xticks));
     const bins = histogram(this.props.data);
     const maxY = _.max(_.map(bins, (b) => b.length));
 
@@ -64,26 +67,26 @@ class Histogram extends Component {
       .enter()
       .append('rect')
       .attr('class', (d, i) => `histogram-chart-rect-${i}`)
-      .attr('x', (d) => xScale(d.x0) + this.settings.margin.left)
-      .attr('y', (d) => yScale(d.length) - this.settings.margin.bottom)
+      .attr('x', (d) => xScale(d.x0) + sts.margin.left)
+      .attr('y', (d) => yScale(d.length) - sts.margin.bottom)
       .attr('width', (d) => (xScale(d.x1) - xScale(d.x0)) * 0.98)
       .attr('height', (d) => heightAval - yScale(d.length))
-      .attr('fill', 'blue');
+      .attr('fill', sts.color);
 
     const xAxis = d3.axisBottom()
       .scale(xScale)
-      .ticks(this.settings.ticks);
+      .ticks(_.min([20, sts.xticks]));
     const yAxis = d3.axisLeft()
       .scale(yScale)
-      .ticks(this.settings.ticks)
+      .ticks(sts.yticks)
       .tickFormat(d3.format('d'));
     this.mainGroup.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${this.settings.margin.left},${heightAval - this.settings.margin.bottom})`)
+      .attr('transform', `translate(${sts.margin.left},${heightAval - sts.margin.bottom})`)
       .call(xAxis);
     this.mainGroup.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${this.settings.margin.left},${-this.settings.margin.bottom})`)
+      .attr('transform', `translate(${sts.margin.left},${-sts.margin.bottom})`)
       .call(yAxis);
   }
 

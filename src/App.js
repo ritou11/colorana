@@ -23,23 +23,26 @@ class App extends Component {
         <Histogram settings={{
           width: 600,
           height: 300,
-          ticks: 20,
+          xticks: 20,
           xmin: 0,
           xmax: 360,
+          color: 'red',
         }} data={_.map(this.state.data, (d) => d[0])}/>
         <Histogram settings={{
           width: 600,
           height: 300,
-          ticks: 20,
+          xticks: 20,
           xmin: 0,
           xmax: 1,
+          color: 'green',
         }} data={_.map(this.state.data, (d) => d[1])}/>
         <Histogram settings={{
           width: 600,
           height: 300,
-          ticks: 20,
+          xticks: 20,
           xmin: 0,
           xmax: 1,
+          color: 'blue',
         }} data={_.map(this.state.data, (d) => d[2])}/>
       </div>
     );
