@@ -3,6 +3,7 @@ import './App.css';
 import * as _ from 'lodash';
 import Canvas from './components/Canvas';
 import Histogram from './components/Histogram';
+import HSLViolin from './components/HSLViolin';
 
 class App extends Component {
   constructor(props) {
@@ -44,6 +45,14 @@ class App extends Component {
           xmax: 1,
           color: 'blue',
         }} data={_.map(this.state.data, (d) => d[2])}/>
+        <HSLViolin settings={{
+          width: 300,
+          height: 600,
+          xticks: 20,
+          xmin: 0,
+          xmax: 1,
+          color: 'blue',
+        }} data={this.state.data}/>
       </div>
     );
   }

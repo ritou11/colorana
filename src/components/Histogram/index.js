@@ -68,7 +68,7 @@ class Histogram extends Component {
       .append('rect')
       .attr('class', (d, i) => `histogram-chart-rect-${i}`)
       .attr('x', (d) => xScale(d.x0) + sts.margin.left)
-      .attr('y', (d) => yScale(d.length) - sts.margin.bottom)
+      .attr('y', (d) => yScale(d.length))
       .attr('width', (d) => (xScale(d.x1) - xScale(d.x0)) * 0.98)
       .attr('height', (d) => heightAval - yScale(d.length))
       .attr('fill', sts.color);
@@ -82,11 +82,11 @@ class Histogram extends Component {
       .tickFormat(d3.format('d'));
     this.mainGroup.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${sts.margin.left},${heightAval - sts.margin.bottom})`)
+      .attr('transform', `translate(${sts.margin.left},${heightAval})`)
       .call(xAxis);
     this.mainGroup.append('g')
       .attr('class', 'axis')
-      .attr('transform', `translate(${sts.margin.left},${-sts.margin.bottom})`)
+      .attr('transform', `translate(${sts.margin.left},0)`)
       .call(yAxis);
   }
 
