@@ -2,48 +2,19 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
-function singleViolin(sel, data, settings) {
-  const sts = settings;
-  const widthAval = sts.width - sts.margin.left - sts.margin.right;
-  const heightAval = sts.height - sts.margin.top - sts.margin.bottom;
-
-  if (!data || !data.length) return;
-
-  const maxY = sts.xmax || _.max(data);
-  const minY = sts.xmin || _.min(data);
-  const lenY = maxY - minY;
-  const yScale = d3.scaleLinear()
-    .domain([minY - lenY * 0.1, maxY + lenY * 0.1])
-    .range([heightAval, 0]);
-  const histogram = d3.histogram()
-    .domain(yScale.domain())
-    .thresholds(yScale.ticks(sts.xticks));
-  const bins = histogram(data);
-  const maxX = _.max(_.map(bins, (b) => b.length));
-  const xNum = d3.scaleLinear()
-    .range([0, widthAval / 2])
-    .domain([-maxX, maxX]);
-  sel.append('path')
-    .datum(bins)
-    .style('stroke', 'none')
-    .style('fill', sts.color)
-    .attr('d', d3.area()
-      .x0((d) => xNum(-d.length))
-      .x1((d) => xNum(d.length))
-      .y((d) => yScale(d.x0))
-      .curve(d3.curveCatmullRom));
-}
-
 class HSLViolin extends Component {
   constructor(props) {
     super(props);
     this.defaultSettings = {
+      select: 1, // 1 for saturation; 2 for lightness
       width: 400,
       height: 200,
       xticks: 10,
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
       color: 'blue',
+      color1: 'white',
+      color2: '#eeeeee',
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
   }
@@ -74,9 +45,50 @@ class HSLViolin extends Component {
 
   drawChart() {
     const sts = this.settings;
+    const widthAval = sts.width - sts.margin.left - sts.margin.right;
+    const heightAval = sts.height - sts.margin.top - sts.margin.bottom;
+
+    const xScale = d3.scaleLinear()
+      .domain([0, 360])
+      .range([0, widthAval]);
     const dvd = d3.histogram()
-      .domain(sts.xmin, sts.xmax);
-    this.mainGroup.call(singleViolin, this.props.data, sts);
+      .domain(xScale.domain())
+      .thresholds(36)
+      .value((d) => d[0]);
+    const hbins = dvd(this.props.data);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, 1])
+      .range([heightAval, 0]);
+    const histogram = d3.histogram()
+      .domain(yScale.domain())
+      .thresholds(yScale.ticks(sts.xticks));
+
+    const xNum = d3.scaleLinear()
+      .range([0, widthAval / 36])
+      .domain([-100, 100]);
+
+    const apt = this.mainGroup.selectAll('.g-violin')
+      .data(hbins)
+      .enter()
+      .append('g')
+      .attr('class', (d, i) => `g-violin single-violin-${i}`)
+      .attr('transform', (d) => `translate(${xScale(d.x0)}, ${sts.margin.top})`);
+    apt.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', widthAval / 36)
+      .attr('height', heightAval)
+      .style('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2))
+    .append('path')
+      .datum((d) => histogram(_.map(d, (t) => t[sts.select])))
+      .style('stroke', 'none')
+      .style('fill', sts.color)
+      .attr('d', d3.area()
+        .x0((d) => xNum(-d.length))
+        .x1((d) => xNum(d.length))
+        .y((d) => yScale(d.x0))
+        .curve(d3.curveCatmullRom));
   }
 
   render() {

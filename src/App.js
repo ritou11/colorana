@@ -46,8 +46,8 @@ class App extends Component {
           color: 'blue',
         }} data={_.map(this.state.data, (d) => d[2])}/>
         <HSLViolin settings={{
-          width: 300,
-          height: 600,
+          width: 600,
+          height: 300,
           xticks: 20,
           xmin: 0,
           xmax: 1,
