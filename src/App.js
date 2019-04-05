@@ -48,10 +48,12 @@ class App extends Component {
         <HSLViolin settings={{
           width: 600,
           height: 300,
-          xticks: 20,
-          xmin: 0,
-          xmax: 1,
-          color: 'blue',
+          select: 1,
+        }} data={this.state.data}/>
+        <HSLViolin settings={{
+          width: 600,
+          height: 300,
+          select: 2,
         }} data={this.state.data}/>
       </div>
     );
