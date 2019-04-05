@@ -21,7 +21,7 @@ class Canvas extends Component {
         <canvas ref="canvas" width={this.props.width} height={this.props.height}>
           Target image
         </canvas>
-        <img ref="image" src={this.props.src} className="hidden" />
+        <img ref="image" src={this.props.src} className="hidden" alt="img"/>
       </div>
     );
   }

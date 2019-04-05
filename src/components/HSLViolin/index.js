@@ -13,7 +13,7 @@ class HSLViolin extends Component {
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
       color: 'blue',
-      color1: 'white',
+      color1: '#eeeeaa',
       color2: '#eeeeee',
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
@@ -64,9 +64,14 @@ class HSLViolin extends Component {
       .domain(yScale.domain())
       .thresholds(yScale.ticks(sts.xticks));
 
+    const binWidth = xScale(hbins[0].x1) - xScale(hbins[0].x0);
+    const maxX = _.max(_.map(hbins,
+      (b) => _.max(_.map(histogram(
+        _.map(b, (t) => t[sts.select]),
+      ), (c) => c.length))));
     const xNum = d3.scaleLinear()
-      .range([0, widthAval / 36])
-      .domain([-100, 100]);
+      .range([0, binWidth])
+      .domain([-maxX * 0.8, maxX * 0.8]);
 
     const apt = this.mainGroup.selectAll('.g-violin')
       .data(hbins)
@@ -77,13 +82,23 @@ class HSLViolin extends Component {
     apt.append('rect')
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', widthAval / 36)
+      .attr('width', binWidth)
       .attr('height', heightAval)
-      .style('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2))
-    .append('path')
+      .style('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2));
+    apt.append('defs')
+      .append('clipPath')
+      .attr('id', (d, i) => `violin-mask-${i}`)
+      .style('pointer-events', 'none')
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', binWidth)
+      .attr('height', heightAval);
+    apt.append('path')
       .datum((d) => histogram(_.map(d, (t) => t[sts.select])))
       .style('stroke', 'none')
       .style('fill', sts.color)
+      .attr('clip-path', (d, i) => `url(#violin-mask-${i})`)
       .attr('d', d3.area()
         .x0((d) => xNum(-d.length))
         .x1((d) => xNum(d.length))
