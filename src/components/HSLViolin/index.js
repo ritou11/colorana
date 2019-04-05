@@ -16,7 +16,7 @@ class HSLViolin extends Component {
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
       textMargin: { top: 0, right: 0, bottom: 30, left: 30 },
       color: 'blue',
-      color1: '#eeeeaa',
+      color1: '#ffffff',
       color2: '#eeeeee',
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
@@ -105,10 +105,37 @@ class HSLViolin extends Component {
       .attr('y', 0)
       .attr('width', binWidth)
       .attr('height', heightAval);
+    apt.select('defs')
+      .append('linearGradient')
+      .attrs((d, i) => ({
+        id: `${this.id}-area-gradient${i}`,
+        gradientUnits: 'userSpaceOnUse',
+        x1: xNum(-d.length),
+        y1: 0,
+        x2: xNum(d.length),
+        y2: 200,
+      }))
+      .selectAll('stop')
+      .data((d) => [
+        {
+          offset: '0%',
+          color: d3.hsl((d.x0 + d.x1) / 2,
+            ([1, 0.5])[sts.select - 1], ([0.5, 1])[sts.select - 1]).hex(),
+        },
+        {
+          offset: '100%',
+          color: d3.hsl((d.x0 + d.x1) / 2,
+            ([0, 0.5])[sts.select - 1], ([0.5, 0])[sts.select - 1]).hex(),
+        },
+      ])
+      .enter()
+      .append('stop')
+      .attr('offset', (d) => d.offset)
+      .attr('stop-color', (d) => d.color);
     apt.append('path')
       .datum((d) => histogram(_.map(d, (t) => t[sts.select])))
       .style('stroke', 'none')
-      .style('fill', sts.color)
+      .style('fill', (d, i) => `url(#${this.id}-area-gradient${i})`)
       .attr('clip-path', (d, i) => `url(#${this.id}-mask-${i})`)
       .attr('d', d3.area()
         .x0((d) => xNum(-d.length))
