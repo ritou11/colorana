@@ -1,7 +1,6 @@
 {
   "name": "colorana",
   "version": "0.1.0",
-  "homepage": "https://github.com/ritou11/colorana",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^1.5.1",
