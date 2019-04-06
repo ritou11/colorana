@@ -11,7 +11,7 @@ class HSLViolin extends Component {
       select: 1, // 1 for saturation; 2 for lightness
       width: 400,
       height: 200,
-      xticks: 10,
+      xticks: 50,
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
       textMargin: { top: 0, right: 0, bottom: 30, left: 30 },
@@ -110,24 +110,13 @@ class HSLViolin extends Component {
       .attrs((d, i) => ({
         id: `${this.id}-area-gradient${i}`,
         gradientUnits: 'userSpaceOnUse',
-        x1: xNum(-d.length),
-        y1: 0,
-        x2: xNum(d.length),
-        y2: 200,
+        x1: '0%',
+        y1: '100%',
+        x2: '0%',
+        y2: '0%',
       }))
       .selectAll('stop')
-      .data((d) => [
-        {
-          offset: '0%',
-          color: d3.hsl((d.x0 + d.x1) / 2,
-            ([1, 0.5])[sts.select - 1], ([0.5, 1])[sts.select - 1]).hex(),
-        },
-        {
-          offset: '100%',
-          color: d3.hsl((d.x0 + d.x1) / 2,
-            ([0, 0.5])[sts.select - 1], ([0.5, 0])[sts.select - 1]).hex(),
-        },
-      ])
+      .data((d) => this.hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
       .enter()
       .append('stop')
       .attr('offset', (d) => d.offset)
@@ -142,7 +131,7 @@ class HSLViolin extends Component {
         .x1((d) => xNum(d.length))
         .y((d) => yScale(d.x0))
         .curve(d3.curveCatmullRom));
-
+    // -------- axis --------
     this.axisGroup.append('defs')
       .append('marker')
       .attrs({
@@ -203,6 +192,22 @@ class HSLViolin extends Component {
           + sts.textMargin.top}) rotate(270)`,
       })
       .text((['Saturation', 'Lightness'])[sts.select - 1]);
+  }
+
+  hslColorGenerator(h, select) {
+    let colorStops;
+    if (select === 1) {
+      colorStops = _.map(_.range(0, 110, 10), (i) => ({
+        offset: `${i}%`,
+        color: d3.hsl(h, i / 100, 0.5).hex(),
+      }));
+    } else {
+      colorStops = _.map(_.range(0, 110, 10), (i) => ({
+        offset: `${i}%`,
+        color: d3.hsl(h, 0.5, i / 100).hex(),
+      }));
+    }
+    return colorStops;
   }
 
   render() {
