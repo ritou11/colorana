@@ -64,6 +64,12 @@ class App extends Component {
           sqrt: true,
           select: 2,
         }} data={this.state.data}/>
+        <HSLViolinPie settings={{
+          outerR: 200,
+          innerR: 100,
+          sqrt: true,
+          select: 1,
+        }} data={this.state.data}/>
       </div>
     );
   }

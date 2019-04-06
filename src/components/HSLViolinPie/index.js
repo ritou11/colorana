@@ -8,6 +8,7 @@ class HSLViolin extends Component {
     super(props);
     this.id = _.uniqueId('hslviolin-');
     this.defaultSettings = {
+      imgPath: 'example.png',
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
       yticks: 10,
@@ -49,6 +50,10 @@ class HSLViolin extends Component {
       .attr('height', this.settings.outerR * 2
         + this.settings.margin.top + this.settings.margin.bottom
         + this.settings.textMargin.top + this.settings.textMargin.bottom);
+    this.imgGroup = this.svg.append('g')
+      .attr('transform', `translate(${this.settings.margin.left
+        + this.settings.textMargin.left},${this.settings.margin.top
+        + this.settings.textMargin.top})`);
     this.mainGroup = this.svg.append('g')
       .attr('transform', `translate(${this.settings.margin.left
         + this.settings.textMargin.left + this.settings.outerR * 2},${this.settings.margin.top
@@ -200,6 +205,16 @@ class HSLViolin extends Component {
         transform: `translate(${sts.outerR * 2 + sts.textMargin.right - 20},${sts.outerR + 5})`,
       })
       .text((['Saturation', 'Lightness'])[sts.select - 1]);
+
+    this.imgGroup
+      .append('image')
+      .attrs({
+        x: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
+        y: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
+        width: sts.innerR * Math.sqrt(2),
+        height: sts.innerR * Math.sqrt(2),
+        'xlink:href': sts.imgPath,
+      });
   }
 
   hslColorGenerator(h, select) {
