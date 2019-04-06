@@ -8,8 +8,14 @@ class Canvas extends Component {
     const { canvas, image } = this.refs;
     image.onload = () => {
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(image, 0, 0);
-      const { data } = ctx.getImageData(0, 0, image.width, image.height);
+      ctx.drawImage(image,
+        (this.props.width - image.width) / 2,
+        (this.props.width - image.width) / 2);
+      const { data } = ctx.getImageData(
+        (this.props.width - image.width) / 2,
+        (this.props.width - image.width) / 2,
+        image.width, image.height,
+      );
       const hsldata = _.map(_.chunk(data, 4), (dt) => rgb2hsl(dt[0], dt[1], dt[2]));
       this.props.storeImgData(hsldata);
     };

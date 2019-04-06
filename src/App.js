@@ -55,7 +55,7 @@ class App extends Component {
         <HSLViolin settings={{
           width: 600,
           height: 200,
-          sqrt: false,
+          sqrt: true,
           select: 2,
         }} data={this.state.data}/>
         <HSLViolinPie settings={{
