@@ -19,6 +19,10 @@ class HSLViolin extends Component {
       color1: '#ffffff',
       color2: '#eeeeee',
       sqrt: false,
+      transitionOn: false,
+      transitionDelay: 1000,
+      transitionDuration: 5000,
+      transitionScale: 5,
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
   }
@@ -123,7 +127,7 @@ class HSLViolin extends Component {
       .append('stop')
       .attr('offset', (d) => d.offset)
       .attr('stop-color', (d) => d.color);
-    apt.append('path')
+    const vio = apt.append('path')
       .datum((d) => histogram(_.map(d, (t) => t[sts.select])))
       .style('stroke', 'none')
       .style('fill', (d, i) => `url(#${this.id}-area-gradient${i})`)
@@ -133,6 +137,16 @@ class HSLViolin extends Component {
         .x1((d) => xNum(sqrt(d.length)))
         .y((d) => yScale(d.x0))
         .curve(d3.curveCatmullRom));
+    if (sts.transitionOn) {
+      vio.transition()
+        .delay(sts.transitionDelay)
+        .duration(sts.transitionDuration)
+        .attr('d', d3.area()
+          .x0((d) => xNum(-sqrt(d.length) * sts.transitionScale))
+          .x1((d) => xNum(sqrt(d.length) * sts.transitionScale))
+          .y((d) => yScale(d.x0))
+          .curve(d3.curveCatmullRom));
+    }
     // -------- axis --------
     this.axisGroup.append('defs')
       .append('marker')

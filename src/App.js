@@ -50,6 +50,7 @@ class App extends Component {
           width: 600,
           height: 200,
           sqrt: false,
+          transitionOn: true,
           select: 1,
         }} data={this.state.data}/>
         <HSLViolin settings={{
@@ -61,7 +62,7 @@ class App extends Component {
         <HSLViolinPie settings={{
           outerR: 200,
           innerR: 100,
-          //imgPath: 'example.png',
+          // imgPath: 'example.png',
           sqrt: true,
           select: 2,
         }} data={this.state.data}/>
