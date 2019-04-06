@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
-class Histogram extends Component {
+class HSLHistogram extends Component {
   constructor(props) {
     super(props);
     this.defaultSettings = {
@@ -66,7 +66,7 @@ class Histogram extends Component {
       .data(bins)
       .enter()
       .append('rect')
-      .attr('class', (d, i) => `histogram-chart-rect-${i}`)
+      .attr('class', (d, i) => `hslhistogram-rect-${i}`)
       .attr('x', (d) => xScale(d.x0) + sts.margin.left)
       .attr('y', (d) => yScale(d.length))
       .attr('width', (d) => (xScale(d.x1) - xScale(d.x0)) * 0.98)
@@ -92,10 +92,10 @@ class Histogram extends Component {
 
   render() {
     return (
-      <div className="histogram-chart" ref={(c) => { this.container = c; }}>
+      <div className="hslhistogram" ref={(c) => { this.container = c; }}>
       </div>
     );
   }
 }
 
-export default Histogram;
+export default HSLHistogram;
