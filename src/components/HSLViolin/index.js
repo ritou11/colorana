@@ -18,6 +18,7 @@ class HSLViolin extends Component {
       color: 'blue',
       color1: '#ffffff',
       color2: '#eeeeee',
+      sqrt: false,
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
   }
@@ -58,6 +59,7 @@ class HSLViolin extends Component {
       - sts.textMargin.left - sts.textMargin.right;
     const heightAval = sts.height - sts.margin.top - sts.margin.bottom
        - sts.textMargin.top - sts.textMargin.bottom;
+    const sqrt = sts.sqrt ? Math.sqrt : (d) => d;
 
     const xScale = d3.scaleLinear()
       .domain([0, 360])
@@ -82,7 +84,7 @@ class HSLViolin extends Component {
       ), (c) => c.length))));
     const xNum = d3.scaleLinear()
       .range([0, binWidth])
-      .domain([-maxX * 0.8, maxX * 0.8]);
+      .domain([-sqrt(maxX) * 0.8, sqrt(maxX) * 0.8]);
 
     const apt = this.mainGroup.selectAll('.g-violin')
       .data(hbins)
@@ -127,8 +129,8 @@ class HSLViolin extends Component {
       .style('fill', (d, i) => `url(#${this.id}-area-gradient${i})`)
       .attr('clip-path', (d, i) => `url(#${this.id}-mask-${i})`)
       .attr('d', d3.area()
-        .x0((d) => xNum(-d.length))
-        .x1((d) => xNum(d.length))
+        .x0((d) => xNum(-sqrt(d.length)))
+        .x1((d) => xNum(sqrt(d.length)))
         .y((d) => yScale(d.x0))
         .curve(d3.curveCatmullRom));
     // -------- axis --------

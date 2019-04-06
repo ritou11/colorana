@@ -47,12 +47,14 @@ class App extends Component {
         }} data={_.map(this.state.data, (d) => d[2])}/>
         <HSLViolin settings={{
           width: 600,
-          height: 300,
+          height: 200,
+          sqrt: false,
           select: 1,
         }} data={this.state.data}/>
         <HSLViolin settings={{
           width: 600,
-          height: 300,
+          height: 200,
+          sqrt: false,
           select: 2,
         }} data={this.state.data}/>
       </div>
