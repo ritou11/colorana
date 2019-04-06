@@ -47,16 +47,17 @@ class HSLHistogram extends Component {
     const sts = this.settings;
     const widthAval = sts.width - sts.margin.left - sts.margin.right;
     const heightAval = sts.height - sts.margin.top - sts.margin.bottom;
+    const data = _.map(this.props.data, (d) => d[sts.select]);
 
-    const maxX = sts.xmax || _.max(this.props.data);
-    const minX = sts.xmin || _.min(this.props.data);
+    const maxX = sts.xmax || _.max(data);
+    const minX = sts.xmin || _.min(data);
     const xScale = d3.scaleLinear()
       .domain([minX, maxX])
       .range([0, widthAval]);
     const histogram = d3.histogram()
       .domain([minX, maxX])
       .thresholds(xScale.ticks(sts.xticks));
-    const bins = histogram(this.props.data);
+    const bins = histogram(data);
     const maxY = _.max(_.map(bins, (b) => b.length));
 
     const yScale = d3.scaleLinear()

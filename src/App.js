@@ -30,7 +30,7 @@ class App extends Component {
           xmax: 360,
           select: 0,
           color: 'red',
-        }} data={_.map(this.state.data, (d) => d[0])}/>
+        }} data={this.state.data}/>
         <HSLHistogram settings={{
           width: 600,
           height: 300,
@@ -39,7 +39,7 @@ class App extends Component {
           xmax: 1,
           select: 1,
           color: 'green',
-        }} data={_.map(this.state.data, (d) => d[1])}/>
+        }} data={this.state.data}/>
         <HSLHistogram settings={{
           width: 600,
           height: 300,
@@ -48,7 +48,7 @@ class App extends Component {
           xmax: 1,
           select: 2,
           color: 'blue',
-        }} data={_.map(this.state.data, (d) => d[2])}/>
+        }} data={this.state.data}/>
         <HSLViolin settings={{
           width: 600,
           height: 200,
