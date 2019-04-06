@@ -11,8 +11,8 @@ class HSLViolin extends Component {
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
       yticks: 10,
-      margin: { top: 10, right: 10, bottom: 30, left: 40 },
-      textMargin: { top: 0, right: 0, bottom: 30, left: 30 },
+      margin: { top: 10, right: 10, bottom: 10, left: 10 },
+      textMargin: { top: 10, right: 10, bottom: 10, left: 10 },
       color: 'blue',
       color1: '#ffffff',
       color2: '#eeeeee',
@@ -27,7 +27,8 @@ class HSLViolin extends Component {
   }
 
   componentDidUpdate() {
-    if (this.settings.r !== this.props.settings.r
+    if (this.settings.innerR !== this.props.settings.innerR
+        || this.settings.outerR !== this.props.settings.outerR
         || this.settings.margin !== this.props.settings.margin
         || this.settings.textMargin !== this.props.settings.textMargin) {
       if (this.svg) this.svg.remove();
@@ -42,10 +43,10 @@ class HSLViolin extends Component {
   initChart() {
     this.svg = d3.select(this.container)
       .append('svg')
-      .attr('width', this.settings.r * 2
+      .attr('width', this.settings.outerR * 2
         + this.settings.margin.left + this.settings.margin.right
         + this.settings.textMargin.left + this.settings.textMargin.right)
-      .attr('height', this.settings.r * 2
+      .attr('height', this.settings.outerR * 2
         + this.settings.margin.top + this.settings.margin.bottom
         + this.settings.textMargin.top + this.settings.textMargin.bottom);
     this.mainGroup = this.svg.append('g')
@@ -58,13 +59,11 @@ class HSLViolin extends Component {
 
   drawChart() {
     const sts = this.settings;
-    const widthAval = sts.r * 2;
-    const heightAval = sts.r * 2;
     const sqrt = sts.sqrt ? Math.sqrt : (d) => d;
 
     const xScale = d3.scaleLinear()
       .domain([0, 360])
-      .range([0, widthAval]);
+      .range([0, Math.PI * 2]);
     const dvd = d3.histogram()
       .domain(xScale.domain())
       .thresholds(36)
@@ -73,7 +72,7 @@ class HSLViolin extends Component {
 
     const yScale = d3.scaleLinear()
       .domain([0, 1])
-      .range([sts.r, 0]);
+      .range([sts.innerR, sts.outerR]);
     const histogram = d3.histogram()
       .domain(yScale.domain())
       .thresholds(yScale.ticks(sts.xticks));
@@ -87,36 +86,48 @@ class HSLViolin extends Component {
       .range([0, binWidth])
       .domain([-sqrt(maxX) * 0.8, sqrt(maxX) * 0.8]);
 
+    const angleScale = d3.scaleLinear()
+      .domain([0, 360])
+      .range([0, Math.PI * 2]);
+
     const apt = this.mainGroup.selectAll('.g-violin')
       .data(hbins)
       .enter()
       .append('g')
       .attr('class', (d, i) => `g-violin single-violin-${i}`)
-      .attr('transform', (d) => `translate(${xScale(d.x0)},0)`);
-    apt.append('rect')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', binWidth)
-      .attr('height', sts.r)
-      .style('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2));
+      .attr('transform', `translate(${sts.outerR},${sts.outerR})`);
+    apt.append('path')
+      .attr('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2))
+      .attr('d', d3.arc()
+        .innerRadius(sts.innerR)
+        .outerRadius(sts.outerR)
+        .startAngle((d) => angleScale(d.x1))
+        .endAngle((d) => angleScale(d.x0))
+        .padAngle(0.01)
+        .padRadius(sts.innerR));
     apt.append('defs')
       .append('clipPath')
       .attr('id', (d, i) => `${this.id}-mask-${i}`)
       .style('pointer-events', 'none')
-      .append('rect')
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', binWidth)
-      .attr('height', sts.r);
+      .append('path')
+      // reverse transform
+      .attr('transform', (d) => `rotate(${-d.x0})`)
+      .attr('d', d3.arc()
+        .innerRadius(sts.innerR)
+        .outerRadius(sts.outerR)
+        .startAngle((d) => angleScale(d.x1))
+        .endAngle((d) => angleScale(d.x0))
+        .padAngle(0.01)
+        .padRadius(sts.innerR));
     apt.select('defs')
-      .append('linearGradient')
+      .append('radialGradient')
       .attrs((d, i) => ({
         id: `${this.id}-area-gradient${i}`,
         gradientUnits: 'userSpaceOnUse',
-        x1: '0%',
-        y1: sts.r,
-        x2: '0%',
-        y2: '0',
+        cx: 0,
+        cy: 0,
+        r: sts.outerR,
+        fr: sts.innerR,
       }))
       .selectAll('stop')
       .data((d) => this.hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
@@ -125,14 +136,15 @@ class HSLViolin extends Component {
       .attr('offset', (d) => d.offset)
       .attr('stop-color', (d) => d.color);
     apt.append('path')
+      .attr('transform', (d) => `rotate(${d.x0})`)
       .datum((d) => histogram(_.map(d, (t) => t[sts.select])))
       .style('stroke', 'none')
       .style('fill', (d, i) => `url(#${this.id}-area-gradient${i})`)
       .attr('clip-path', (d, i) => `url(#${this.id}-mask-${i})`)
-      .attr('d', d3.area()
-        .x0((d) => xNum(-sqrt(d.length)))
-        .x1((d) => xNum(sqrt(d.length)))
-        .y((d) => yScale(d.x0))
+      .attr('d', d3.areaRadial()
+        .startAngle((d) => xNum(-sqrt(d.length)))
+        .endAngle((d) => xNum(sqrt(d.length)))
+        .radius((d) => yScale(d.x0))
         .curve(d3.curveCatmullRom));
     // -------- axis --------
     this.axisGroup.append('defs')
@@ -152,49 +164,6 @@ class HSLViolin extends Component {
         d: 'M2,2 L10,6 L2,10 L6,6 L2,2',
         style: 'fill: #000000;',
       });
-    this.axisGroup.append('g')
-      .attr('class', 'g-xAxis')
-      .attr('transform', `translate(${sts.textMargin.left},${sts.textMargin.top})`)
-      .append('line')
-      .attrs({
-        x1: 0,
-        y1: sts.r,
-        x2: widthAval,
-        y2: sts.r,
-        stroke: 'black',
-        'stroke-width': 1.5,
-        'marker-end': `url(#${this.id}-arrow)`,
-      });
-    this.axisGroup.append('g')
-      .attr('class', 'g-yAxis')
-      .attr('transform', `translate(${sts.textMargin.left},${sts.textMargin.top})`)
-      .append('line')
-      .attrs({
-        x1: 0,
-        y1: sts.r,
-        x2: 0,
-        y2: 0,
-        stroke: 'black',
-        'stroke-width': 1.5,
-        'marker-end': `url(#${this.id}-arrow)`,
-      });
-    this.axisGroup.append('text')
-      .attrs({
-        'text-anchor': 'middle',
-        fill: 'black',
-        'font-size': '12px',
-        transform: `translate(${widthAval / 2 + sts.textMargin.left},${sts.r + 16 + sts.textMargin.top})`,
-      })
-      .text('Hue');
-    this.axisGroup.append('text')
-      .attrs({
-        'text-anchor': 'middle',
-        fill: 'black',
-        'font-size': '12px',
-        transform: `translate(${sts.textMargin.left - 10},${sts.r / 2
-          + sts.textMargin.top}) rotate(270)`,
-      })
-      .text((['Saturation', 'Lightness'])[sts.select - 1]);
   }
 
   hslColorGenerator(h, select) {
