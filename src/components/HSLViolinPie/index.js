@@ -8,7 +8,6 @@ class HSLViolin extends Component {
     super(props);
     this.id = _.uniqueId('hslviolin-');
     this.defaultSettings = {
-      imgPath: 'example.png',
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
       yticks: 10,
@@ -36,6 +35,7 @@ class HSLViolin extends Component {
       this.initChart();
     }
     this.settings = _.merge(this.defaultSettings, this.props.settings);
+    if (!this.settings.imgPath) this.settings.innerR = 0;
     this.mainGroup.selectAll('*').remove();
     this.axisGroup.selectAll('*').remove();
     this.drawChart();
@@ -63,6 +63,7 @@ class HSLViolin extends Component {
   }
 
   drawChart() {
+    if (!this.props.data || !this.props.data.length) return;
     const sts = this.settings;
     const sqrt = sts.sqrt ? Math.sqrt : (d) => d;
 
@@ -205,16 +206,17 @@ class HSLViolin extends Component {
         transform: `translate(${sts.outerR * 2 + sts.textMargin.right - 20},${sts.outerR + 5})`,
       })
       .text((['Saturation', 'Lightness'])[sts.select - 1]);
-
-    this.imgGroup
-      .append('image')
-      .attrs({
-        x: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
-        y: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
-        width: sts.innerR * Math.sqrt(2),
-        height: sts.innerR * Math.sqrt(2),
-        'xlink:href': sts.imgPath,
-      });
+    if (sts.imgPath) {
+      this.imgGroup
+        .append('image')
+        .attrs({
+          x: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
+          y: sts.outerR - sts.innerR * Math.sqrt(2) / 2,
+          width: sts.innerR * Math.sqrt(2),
+          height: sts.innerR * Math.sqrt(2),
+          'xlink:href': sts.imgPath,
+        });
+    }
   }
 
   hslColorGenerator(h, select) {

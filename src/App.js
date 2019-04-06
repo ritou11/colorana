@@ -61,12 +61,14 @@ class App extends Component {
         <HSLViolinPie settings={{
           outerR: 200,
           innerR: 100,
+          //imgPath: 'example.png',
           sqrt: true,
           select: 2,
         }} data={this.state.data}/>
         <HSLViolinPie settings={{
           outerR: 200,
           innerR: 100,
+          imgPath: 'example.png',
           sqrt: true,
           select: 1,
         }} data={this.state.data}/>
