@@ -12,3 +12,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.fixed {
+  height: 100%;
+  display: flex;
+  overflow: auto;
+  flex-wrap: wrap;
+  position: fixed;
+}

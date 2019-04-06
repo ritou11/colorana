@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
 import './App.css';
 import Canvas from './components/Canvas';
-import HSLHistogram from './components/HSLHistogram';
-import HSLViolin from './components/HSLViolin';
-import HSLViolinPie from './components/HSLViolinPie';
+import FigureBoard from './components/FigureBoard';
 
 class App extends Component {
   constructor(props) {
@@ -19,59 +18,15 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
-        <HSLHistogram settings={{
-          width: 600,
-          height: 200,
-          xmin: 0,
-          xmax: 360,
-          select: 0,
-          color: 'red',
-        }} data={this.state.data}/>
-        <HSLHistogram settings={{
-          width: 600,
-          height: 200,
-          xmin: 0,
-          xmax: 1,
-          select: 1,
-          color: 'green',
-        }} data={this.state.data}/>
-        <HSLHistogram settings={{
-          width: 600,
-          height: 200,
-          xmin: 0,
-          xmax: 1,
-          select: 2,
-          color: 'blue',
-        }} data={this.state.data}/>
-        <HSLViolin settings={{
-          width: 600,
-          height: 200,
-          sqrt: false,
-          transitionOn: true,
-          select: 1,
-        }} data={this.state.data}/>
-        <HSLViolin settings={{
-          width: 600,
-          height: 200,
-          sqrt: true,
-          select: 2,
-        }} data={this.state.data}/>
-        <HSLViolinPie settings={{
-          outerR: 200,
-          innerR: 100,
-          // imgPath: 'example.png',
-          sqrt: true,
-          select: 2,
-        }} data={this.state.data}/>
-        <HSLViolinPie settings={{
-          outerR: 200,
-          innerR: 100,
-          imgPath: 'example.png',
-          sqrt: true,
-          select: 1,
-        }} data={this.state.data}/>
+      <div className="gApp">
+        <Grid container spacing={12} direction='row'>
+          <Grid item xs={4} className='fixed'>
+            <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
+          </Grid>
+          <Grid item xs>
+            <FigureBoard data={this.state.data}/>
+          </Grid>
+        </Grid>
       </div>
     );
   }
