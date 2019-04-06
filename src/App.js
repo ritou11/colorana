@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import * as _ from 'lodash';
 import Canvas from './components/Canvas';
 import HSLHistogram from './components/HSLHistogram';
 import HSLViolin from './components/HSLViolin';
@@ -24,8 +23,7 @@ class App extends Component {
         <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
         <HSLHistogram settings={{
           width: 600,
-          height: 300,
-          xticks: 20,
+          height: 200,
           xmin: 0,
           xmax: 360,
           select: 0,
@@ -33,8 +31,7 @@ class App extends Component {
         }} data={this.state.data}/>
         <HSLHistogram settings={{
           width: 600,
-          height: 300,
-          xticks: 20,
+          height: 200,
           xmin: 0,
           xmax: 1,
           select: 1,
@@ -42,8 +39,7 @@ class App extends Component {
         }} data={this.state.data}/>
         <HSLHistogram settings={{
           width: 600,
-          height: 300,
-          xticks: 20,
+          height: 200,
           xmin: 0,
           xmax: 1,
           select: 2,

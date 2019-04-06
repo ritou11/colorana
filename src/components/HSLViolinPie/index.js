@@ -12,7 +12,7 @@ class HSLViolin extends Component {
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
       yticks: 10,
-      margin: { top: 10, right: 10, bottom: 10, left: 10 },
+      margin: { top: 10, right: 0, bottom: 10, left: 0 },
       textMargin: { top: 10, right: 30, bottom: 10, left: 10 },
       color: 'blue',
       color1: '#ffffff',
