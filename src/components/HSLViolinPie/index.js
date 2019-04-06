@@ -7,7 +7,7 @@ import { hslColorGenerator } from '../../utils';
 class HSLViolin extends Component {
   constructor(props) {
     super(props);
-    this.id = _.uniqueId('hslviolin-');
+    this.id = _.uniqueId('hslviolinpie-');
     this.defaultSettings = {
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
@@ -133,7 +133,7 @@ class HSLViolin extends Component {
         fr: sts.innerR,
       }))
       .selectAll('stop')
-      .data((d) => hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
+      .data((d) => hslColorGenerator(sts.select, { h: (d.x0 + d.x1) / 2, s: 0.5, l: 0.5 }))
       .enter()
       .append('stop')
       .attr('offset', (d) => d.offset)

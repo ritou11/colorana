@@ -59,6 +59,7 @@ class HSLViolin extends Component {
   }
 
   drawChart() {
+    if (!this.props.data || !this.props.data.length) return;
     const sts = this.settings;
     const widthAval = sts.width - sts.margin.left - sts.margin.right
       - sts.textMargin.left - sts.textMargin.right;
@@ -123,7 +124,7 @@ class HSLViolin extends Component {
         y2: '0%',
       }))
       .selectAll('stop')
-      .data((d) => hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
+      .data((d) => hslColorGenerator(sts.select, { h: (d.x0 + d.x1) / 2, s: 0.5, l: 0.5 }))
       .enter()
       .append('stop')
       .attr('offset', (d) => d.offset)

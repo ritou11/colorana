@@ -24,17 +24,22 @@ export function rgb2hsl(r, g, b) {
 }
 
 
-export function hslColorGenerator(h, select) {
+export function hslColorGenerator(select, { h, s, l }) {
   let colorStops;
-  if (select === 1) {
+  if (select === 0) {
     colorStops = _.map(_.range(0, 110, 10), (i) => ({
       offset: `${i}%`,
-      color: hsl(h, i / 100, 0.5).hex(),
+      color: hsl(i * 3.6, s, l).hex(),
+    }));
+  } else if (select === 1) {
+    colorStops = _.map(_.range(0, 110, 10), (i) => ({
+      offset: `${i}%`,
+      color: hsl(h, i / 100, l).hex(),
     }));
   } else {
     colorStops = _.map(_.range(0, 110, 10), (i) => ({
       offset: `${i}%`,
-      color: hsl(h, 0.5, i / 100).hex(),
+      color: hsl(h, s, i / 100).hex(),
     }));
   }
   return colorStops;

@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
+import { hslColorGenerator } from '../../utils';
 
 class HSLHistogram extends Component {
   constructor(props) {
     super(props);
+    this.id = _.uniqueId('hslhistogram-');
     this.defaultSettings = {
       width: 400,
       height: 200,
       xticks: 10,
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
-      color: 'blue',
+      select: 1,
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
   }
@@ -41,11 +43,10 @@ class HSLHistogram extends Component {
   }
 
   drawChart() {
+    if (!this.props.data || !this.props.data.length) return;
     const sts = this.settings;
     const widthAval = sts.width - sts.margin.left - sts.margin.right;
     const heightAval = sts.height - sts.margin.top - sts.margin.bottom;
-
-    if (!this.props.data || !this.props.data.length) return;
 
     const maxX = sts.xmax || _.max(this.props.data);
     const minX = sts.xmin || _.min(this.props.data);
@@ -62,6 +63,23 @@ class HSLHistogram extends Component {
       .domain([0, maxY])
       .range([heightAval, 0]);
 
+    this.mainGroup.append('defs')
+      .append('linearGradient')
+      .attrs({
+        id: `${this.id}-area-gradient`,
+        gradientUnits: 'userSpaceOnUse',
+        x1: sts.margin.left,
+        y1: '0%',
+        x2: sts.margin.left + widthAval,
+        y2: '0%',
+      })
+      .selectAll('stop')
+      .data(hslColorGenerator(sts.select, { h: 0, s: 0.5, l: 0.5 }))
+      .enter()
+      .append('stop')
+      .attr('offset', (d) => d.offset)
+      .attr('stop-color', (d) => d.color);
+
     this.mainGroup.selectAll('rect')
       .data(bins)
       .enter()
@@ -71,7 +89,7 @@ class HSLHistogram extends Component {
       .attr('y', (d) => yScale(d.length))
       .attr('width', (d) => (xScale(d.x1) - xScale(d.x0)) * 0.98)
       .attr('height', (d) => heightAval - yScale(d.length))
-      .attr('fill', sts.color);
+      .attr('fill', `url(#${this.id}-area-gradient)`);
 
     const xAxis = d3.axisBottom()
       .scale(xScale)
@@ -92,7 +110,7 @@ class HSLHistogram extends Component {
 
   render() {
     return (
-      <div className="hslhistogram" ref={(c) => { this.container = c; }}>
+      <div className="hslhistogram" id={this.id} ref={(c) => { this.container = c; }}>
       </div>
     );
   }
