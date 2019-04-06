@@ -12,7 +12,7 @@ class HSLViolin extends Component {
       xticks: 50,
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 10, left: 10 },
-      textMargin: { top: 10, right: 10, bottom: 10, left: 10 },
+      textMargin: { top: 10, right: 30, bottom: 10, left: 10 },
       color: 'blue',
       color1: '#ffffff',
       color2: '#eeeeee',
@@ -51,8 +51,8 @@ class HSLViolin extends Component {
         + this.settings.textMargin.top + this.settings.textMargin.bottom);
     this.mainGroup = this.svg.append('g')
       .attr('transform', `translate(${this.settings.margin.left
-        + this.settings.textMargin.left},${this.settings.margin.top
-        + this.settings.textMargin.top})`);
+        + this.settings.textMargin.left + this.settings.outerR * 2},${this.settings.margin.top
+        + this.settings.textMargin.top})rotate(90)`);
     this.axisGroup = this.svg.append('g')
       .attr('transform', `translate(${this.settings.margin.left},${this.settings.margin.top})`);
   }
@@ -86,10 +86,6 @@ class HSLViolin extends Component {
       .range([0, binWidth])
       .domain([-sqrt(maxX) * 0.8, sqrt(maxX) * 0.8]);
 
-    const angleScale = d3.scaleLinear()
-      .domain([0, 360])
-      .range([0, Math.PI * 2]);
-
     const apt = this.mainGroup.selectAll('.g-violin')
       .data(hbins)
       .enter()
@@ -101,8 +97,8 @@ class HSLViolin extends Component {
       .attr('d', d3.arc()
         .innerRadius(sts.innerR)
         .outerRadius(sts.outerR)
-        .startAngle((d) => angleScale(d.x1))
-        .endAngle((d) => angleScale(d.x0))
+        .startAngle((d) => xScale(d.x1))
+        .endAngle((d) => xScale(d.x0))
         .padAngle(0.01)
         .padRadius(sts.innerR));
     apt.append('defs')
@@ -115,8 +111,8 @@ class HSLViolin extends Component {
       .attr('d', d3.arc()
         .innerRadius(sts.innerR)
         .outerRadius(sts.outerR)
-        .startAngle((d) => angleScale(d.x1))
-        .endAngle((d) => angleScale(d.x0))
+        .startAngle((d) => xScale(d.x1))
+        .endAngle((d) => xScale(d.x0))
         .padAngle(0.01)
         .padRadius(sts.innerR));
     apt.select('defs')
@@ -164,6 +160,46 @@ class HSLViolin extends Component {
         d: 'M2,2 L10,6 L2,10 L6,6 L2,2',
         style: 'fill: #000000;',
       });
+    this.axisGroup.append('g')
+      .attr('class', 'g-xAxis')
+      .attr('transform', `translate(${sts.textMargin.left},${sts.textMargin.top})`)
+      .append('line')
+      .attrs({
+        x1: sts.outerR,
+        y1: sts.outerR,
+        x2: sts.outerR * 2 + sts.textMargin.right,
+        y2: sts.outerR,
+        stroke: 'black',
+        'stroke-width': 1.5,
+        'marker-end': `url(#${this.id}-arrow)`,
+      });
+    this.axisGroup.append('g')
+      .attr('class', 'g-yAxis')
+      .attr('transform', `translate(${sts.textMargin.left + sts.outerR},${sts.textMargin.top})`)
+      .append('path')
+      .attrs({
+        d: `M${-sts.outerR} ${sts.outerR} A${sts.outerR} ${sts.outerR} 0 1 1 0 ${sts.outerR * 2}`,
+        stroke: 'black',
+        fill: 'none',
+        'stroke-width': 1.5,
+        'marker-end': `url(#${this.id}-arrow)`,
+      });
+    this.axisGroup.append('text')
+      .attrs({
+        'text-anchor': 'middle',
+        fill: 'black',
+        'font-size': '12px',
+        transform: `translate(${sts.outerR + sts.textMargin.left - 20},${sts.outerR * 2 + sts.textMargin.top})`,
+      })
+      .text('Hue');
+    this.axisGroup.append('text')
+      .attrs({
+        'text-anchor': 'middle',
+        fill: 'black',
+        'font-size': '12px',
+        transform: `translate(${sts.outerR * 2 + sts.textMargin.right - 20},${sts.outerR + 5})`,
+      })
+      .text((['Saturation', 'Lightness'])[sts.select - 1]);
   }
 
   hslColorGenerator(h, select) {
