@@ -1,4 +1,7 @@
-function rgb2hsl(r, g, b) {
+import { hsl } from 'd3';
+import * as _ from 'lodash';
+
+export function rgb2hsl(r, g, b) {
   const r1 = r / 255;
   const g1 = g / 255;
   const b1 = b / 255;
@@ -20,4 +23,19 @@ function rgb2hsl(r, g, b) {
   return [h, s, l];
 }
 
-export default rgb2hsl;
+
+export function hslColorGenerator(h, select) {
+  let colorStops;
+  if (select === 1) {
+    colorStops = _.map(_.range(0, 110, 10), (i) => ({
+      offset: `${i}%`,
+      color: hsl(h, i / 100, 0.5).hex(),
+    }));
+  } else {
+    colorStops = _.map(_.range(0, 110, 10), (i) => ({
+      offset: `${i}%`,
+      color: hsl(h, 0.5, i / 100).hex(),
+    }));
+  }
+  return colorStops;
+}

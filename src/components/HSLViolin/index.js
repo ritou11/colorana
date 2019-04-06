@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 import 'd3-selection-multi';
+import { hslColorGenerator } from '../../utils';
 
 class HSLViolin extends Component {
   constructor(props) {
@@ -122,7 +123,7 @@ class HSLViolin extends Component {
         y2: '0%',
       }))
       .selectAll('stop')
-      .data((d) => this.hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
+      .data((d) => hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
       .enter()
       .append('stop')
       .attr('offset', (d) => d.offset)
@@ -208,22 +209,6 @@ class HSLViolin extends Component {
           + sts.textMargin.top}) rotate(270)`,
       })
       .text((['Saturation', 'Lightness'])[sts.select - 1]);
-  }
-
-  hslColorGenerator(h, select) {
-    let colorStops;
-    if (select === 1) {
-      colorStops = _.map(_.range(0, 110, 10), (i) => ({
-        offset: `${i}%`,
-        color: d3.hsl(h, i / 100, 0.5).hex(),
-      }));
-    } else {
-      colorStops = _.map(_.range(0, 110, 10), (i) => ({
-        offset: `${i}%`,
-        color: d3.hsl(h, 0.5, i / 100).hex(),
-      }));
-    }
-    return colorStops;
   }
 
   render() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as _ from 'lodash';
 
-import rgb2hsl from '../../utils';
+import { rgb2hsl } from '../../utils';
 
 class Canvas extends Component {
   componentDidMount() {
