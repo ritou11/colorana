@@ -9,8 +9,6 @@ class HSLViolin extends Component {
     this.id = _.uniqueId('hslviolin-');
     this.defaultSettings = {
       select: 1, // 1 for saturation; 2 for lightness
-      width: 400,
-      height: 200,
       xticks: 50,
       yticks: 10,
       margin: { top: 10, right: 10, bottom: 30, left: 40 },
@@ -29,8 +27,9 @@ class HSLViolin extends Component {
   }
 
   componentDidUpdate() {
-    if (this.settings.width !== this.props.settings.width
-      || this.settings.height !== this.props.settings.height) {
+    if (this.settings.r !== this.props.settings.r
+        || this.settings.margin !== this.props.settings.margin
+        || this.settings.textMargin !== this.props.settings.textMargin) {
       if (this.svg) this.svg.remove();
       this.initChart();
     }
@@ -43,8 +42,12 @@ class HSLViolin extends Component {
   initChart() {
     this.svg = d3.select(this.container)
       .append('svg')
-      .attr('width', this.settings.width)
-      .attr('height', this.settings.height);
+      .attr('width', this.settings.r * 2
+        + this.settings.margin.left + this.settings.margin.right
+        + this.settings.textMargin.left + this.settings.textMargin.right)
+      .attr('height', this.settings.r * 2
+        + this.settings.margin.top + this.settings.margin.bottom
+        + this.settings.textMargin.top + this.settings.textMargin.bottom);
     this.mainGroup = this.svg.append('g')
       .attr('transform', `translate(${this.settings.margin.left
         + this.settings.textMargin.left},${this.settings.margin.top
@@ -55,10 +58,8 @@ class HSLViolin extends Component {
 
   drawChart() {
     const sts = this.settings;
-    const widthAval = sts.width - sts.margin.left - sts.margin.right
-      - sts.textMargin.left - sts.textMargin.right;
-    const heightAval = sts.height - sts.margin.top - sts.margin.bottom
-       - sts.textMargin.top - sts.textMargin.bottom;
+    const widthAval = sts.r * 2;
+    const heightAval = sts.r * 2;
     const sqrt = sts.sqrt ? Math.sqrt : (d) => d;
 
     const xScale = d3.scaleLinear()
@@ -72,7 +73,7 @@ class HSLViolin extends Component {
 
     const yScale = d3.scaleLinear()
       .domain([0, 1])
-      .range([heightAval, 0]);
+      .range([sts.r, 0]);
     const histogram = d3.histogram()
       .domain(yScale.domain())
       .thresholds(yScale.ticks(sts.xticks));
@@ -96,7 +97,7 @@ class HSLViolin extends Component {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', binWidth)
-      .attr('height', heightAval)
+      .attr('height', sts.r)
       .style('fill', (d, i) => (i % 2 === 0 ? sts.color1 : sts.color2));
     apt.append('defs')
       .append('clipPath')
@@ -106,16 +107,16 @@ class HSLViolin extends Component {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', binWidth)
-      .attr('height', heightAval);
+      .attr('height', sts.r);
     apt.select('defs')
       .append('linearGradient')
       .attrs((d, i) => ({
         id: `${this.id}-area-gradient${i}`,
         gradientUnits: 'userSpaceOnUse',
         x1: '0%',
-        y1: heightAval,
+        y1: sts.r,
         x2: '0%',
-        y2: '0%',
+        y2: '0',
       }))
       .selectAll('stop')
       .data((d) => this.hslColorGenerator((d.x0 + d.x1) / 2, sts.select))
@@ -157,9 +158,9 @@ class HSLViolin extends Component {
       .append('line')
       .attrs({
         x1: 0,
-        y1: heightAval,
+        y1: sts.r,
         x2: widthAval,
-        y2: heightAval,
+        y2: sts.r,
         stroke: 'black',
         'stroke-width': 1.5,
         'marker-end': `url(#${this.id}-arrow)`,
@@ -170,7 +171,7 @@ class HSLViolin extends Component {
       .append('line')
       .attrs({
         x1: 0,
-        y1: heightAval,
+        y1: sts.r,
         x2: 0,
         y2: 0,
         stroke: 'black',
@@ -182,7 +183,7 @@ class HSLViolin extends Component {
         'text-anchor': 'middle',
         fill: 'black',
         'font-size': '12px',
-        transform: `translate(${widthAval / 2 + sts.textMargin.left},${heightAval + 16 + sts.textMargin.top})`,
+        transform: `translate(${widthAval / 2 + sts.textMargin.left},${sts.r + 16 + sts.textMargin.top})`,
       })
       .text('Hue');
     this.axisGroup.append('text')
@@ -190,7 +191,7 @@ class HSLViolin extends Component {
         'text-anchor': 'middle',
         fill: 'black',
         'font-size': '12px',
-        transform: `translate(${sts.textMargin.left - 10},${heightAval / 2
+        transform: `translate(${sts.textMargin.left - 10},${sts.r / 2
           + sts.textMargin.top}) rotate(270)`,
       })
       .text((['Saturation', 'Lightness'])[sts.select - 1]);

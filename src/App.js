@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import Canvas from './components/Canvas';
 import Histogram from './components/Histogram';
 import HSLViolin from './components/HSLViolin';
+import HSLViolinPie from './components/HSLViolinPie';
 
 class App extends Component {
   constructor(props) {
@@ -55,6 +56,11 @@ class App extends Component {
           width: 600,
           height: 200,
           sqrt: false,
+          select: 2,
+        }} data={this.state.data}/>
+        <HSLViolinPie settings={{
+          r: 200,
+          sqrt: true,
           select: 2,
         }} data={this.state.data}/>
       </div>
