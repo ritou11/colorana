@@ -215,7 +215,8 @@ class HSLViolin extends Component {
 
   render() {
     return (
-      <div className={`${this.name}-chart`} id={this.id} ref={(c) => { this.container = c; }}>
+      <div className={`${this.name}-chart`} id={this.id}
+        ref={(c) => { this.container = c; }} style={{ textAlign: 'center' }}>
       </div>
     );
   }

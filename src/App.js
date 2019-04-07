@@ -19,11 +19,11 @@ const styles = {
     flex: 1,
     padding: '48px 36px 0',
   },
-  left: {
+  right: {
     width: '400px',
     flexShrink: 0,
   },
-  leftContent: {
+  rightContent: {
     width: '400px',
     flexShrink: 0,
     height: '100%',
@@ -51,15 +51,15 @@ class App extends Component {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <div className={classes.left}>
-          <div className={classes.leftContent}>
-            <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
-          </div>
-        </div>
         <div className={classes.appContent}>
           <main className={classes.mainContent}>
             <FigureBoard data={this.state.data}/>
           </main>
+        </div>
+        <div className={classes.right}>
+          <div className={classes.rightContent}>
+            <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
+          </div>
         </div>
       </div>
     );
