@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import HSLHistogram from '../HSLHistogram';
 import HSLViolin from '../HSLViolin';
@@ -8,8 +7,8 @@ import HSLViolinPie from '../HSLViolinPie';
 class FigureBoard extends Component {
   render() {
     return (
-      <Grid container alignContent='center' direction='column' justify='center' spacing={1} xs>
-        <Grid item alignContent='center'>
+      <Grid container alignContent='center' direction='column' justify='center' spacing={8}>
+        <Grid item>
           <HSLHistogram settings={{
             width: 600,
             height: 200,
@@ -35,7 +34,7 @@ class FigureBoard extends Component {
             color: 'blue',
           }} data={this.props.data}/>
         </Grid>
-        <Grid item alignContent='center'>
+        <Grid item>
           <HSLViolin settings={{
             width: 600,
             height: 200,
@@ -50,7 +49,7 @@ class FigureBoard extends Component {
             select: 2,
           }} data={this.props.data}/>
         </Grid>
-        <Grid item alignContent='center'>
+        <Grid item>
           <HSLViolinPie settings={{
             outerR: 200,
             innerR: 100,

@@ -1,5 +1,6 @@
 {
   "extends": "airbnb-base",
+  "parser": "babel-eslint",
   "env": {
     "node": true,
     "jest": true,
@@ -13,7 +14,8 @@
     "ecmaVersion": 2017,
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "experimentalObjectRestSpread": true
     }
   },
   "rules": {

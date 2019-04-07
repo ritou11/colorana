@@ -4,10 +4,11 @@ import * as d3 from 'd3';
 import 'd3-selection-multi';
 import { hslColorGenerator } from '../../utils';
 
-class HSLViolin extends Component {
+class HSLViolinPie extends Component {
   constructor(props) {
     super(props);
-    this.id = _.uniqueId('hslviolinpie-');
+    this.name = this.constructor.name.toLowerCase();
+    this.id = _.uniqueId(`${this.name}-`);
     this.defaultSettings = {
       select: 1, // 1 for saturation; 2 for lightness
       xticks: 50,
@@ -45,12 +46,15 @@ class HSLViolin extends Component {
   initChart() {
     this.svg = d3.select(this.container)
       .append('svg')
-      .attr('width', this.settings.outerR * 2
-        + this.settings.margin.left + this.settings.margin.right
-        + this.settings.textMargin.left + this.settings.textMargin.right)
-      .attr('height', this.settings.outerR * 2
-        + this.settings.margin.top + this.settings.margin.bottom
-        + this.settings.textMargin.top + this.settings.textMargin.bottom);
+      .attrs({
+        class: `${this.name}-svg`,
+        width: this.settings.outerR * 2
+          + this.settings.margin.left + this.settings.margin.right
+          + this.settings.textMargin.left + this.settings.textMargin.right,
+        height: this.settings.outerR * 2
+          + this.settings.margin.top + this.settings.margin.bottom
+          + this.settings.textMargin.top + this.settings.textMargin.bottom,
+      });
     this.imgGroup = this.svg.append('g')
       .attr('transform', `translate(${this.settings.margin.left
         + this.settings.textMargin.left},${this.settings.margin.top
@@ -222,10 +226,10 @@ class HSLViolin extends Component {
 
   render() {
     return (
-      <div className="HSLViolin-chart" id={this.id} ref={(c) => { this.container = c; }}>
+      <div className={`${this.name}-chart`} id={this.id} ref={(c) => { this.container = c; }}>
       </div>
     );
   }
 }
 
-export default HSLViolin;
+export default HSLViolinPie;
