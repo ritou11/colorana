@@ -19,17 +19,12 @@ const styles = {
     flex: 1,
     padding: '48px 36px 0',
   },
-  fixed: {
-    height: '100%',
-    overflow: 'auto',
-    position: 'fixed',
-  },
   left: {
-    width: '20vw',
+    width: '400px',
     flexShrink: 0,
   },
   leftContent: {
-    width: '20vw',
+    width: '400px',
     flexShrink: 0,
     height: '100%',
     overflowY: 'auto',

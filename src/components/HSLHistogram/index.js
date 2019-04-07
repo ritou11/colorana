@@ -6,7 +6,8 @@ import { hslColorGenerator } from '../../utils';
 class HSLHistogram extends Component {
   constructor(props) {
     super(props);
-    this.id = _.uniqueId('hslhistogram-');
+    this.name = this.constructor.name.toLowerCase();
+    this.id = _.uniqueId(`${this.name}-`);
     this.defaultSettings = {
       width: 400,
       height: 200,
@@ -94,7 +95,7 @@ class HSLHistogram extends Component {
       .data(bins)
       .enter()
       .append('rect')
-      .attr('class', (d, i) => `hslhistogram-rect-${i}`)
+      .attr('id', (d, i) => `${this.id}-rect-${i}`)
       .attr('x', (d) => xScale(d.x0) + sts.margin.left)
       .attr('y', (d) => yScale(d.length))
       .attr('width', (d) => (xScale(d.x1) - xScale(d.x0)) * 0.98)
@@ -128,7 +129,7 @@ class HSLHistogram extends Component {
 
   render() {
     return (
-      <div className="hslhistogram" id={this.id} ref={(c) => { this.container = c; }}>
+      <div className={`${this.name}-chart`} id={this.id} ref={(c) => { this.container = c; }}>
       </div>
     );
   }

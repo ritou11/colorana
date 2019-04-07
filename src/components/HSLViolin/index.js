@@ -7,7 +7,8 @@ import { hslColorGenerator } from '../../utils';
 class HSLViolin extends Component {
   constructor(props) {
     super(props);
-    this.id = _.uniqueId('hslviolin-');
+    this.name = this.constructor.name.toLowerCase();
+    this.id = _.uniqueId(`${this.name}-`);
     this.defaultSettings = {
       select: 1, // 1 for saturation; 2 for lightness
       width: 400,
@@ -214,7 +215,7 @@ class HSLViolin extends Component {
 
   render() {
     return (
-      <div className="HSLViolin-chart" id={this.id} ref={(c) => { this.container = c; }}>
+      <div className={`${this.name}-chart`} id={this.id} ref={(c) => { this.container = c; }}>
       </div>
     );
   }

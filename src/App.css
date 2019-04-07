@@ -27,7 +27,14 @@
   display: none;
 }
 
-.hslviolinpie-svg {
-  display: block;
-  margin: auto;
+.hslviolinpie-chart {
+  text-align: center;
+}
+
+.hslviolin-chart {
+  text-align: center;
+}
+
+.hslhistogram-chart {
+  text-align: center;
 }
