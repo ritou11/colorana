@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import Divider from '@material-ui/core/Divider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import './App.css';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +12,7 @@ import Canvas from './components/Canvas';
 import HSLHistogram from './components/HSLHistogram';
 import HSLViolin from './components/HSLViolin';
 import HSLViolinPie from './components/HSLViolinPie';
+import UploadField from './components/UploadField';
 
 const styles = {
   root: {
@@ -40,13 +41,13 @@ const styles = {
     verticalAlign: 'middle',
   },
   right: {
-    width: '400px',
+    width: '440px',
     flexShrink: 0,
   },
   rightContent: {
-    width: '400px',
     flexShrink: 0,
     height: '100%',
+    padding: '0 20px',
     overflowY: 'auto',
     position: 'fixed',
     background: '#eaeff1',
@@ -177,6 +178,8 @@ class App extends Component {
           <div className={classes.right}>
             <div className={classes.rightContent}>
               <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
+              <Divider />
+              <UploadField />
             </div>
           </div>
         </main>
