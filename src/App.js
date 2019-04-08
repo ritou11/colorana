@@ -51,6 +51,16 @@ const styles = {
     position: 'fixed',
     background: '#eaeff1',
   },
+  appBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  title: {
+    flexGrow: 1,
+    marginRight: '32px',
+    textAlign: 'right',
+  },
 };
 
 class App extends Component {
@@ -77,13 +87,16 @@ class App extends Component {
       <div className={classes.root}>
         <CssBaseline />
         <div style={{ minHeight: '48px' }}>
-          <AppBar>
+          <AppBar className={classes.appBar}>
             <Tabs value={this.state.tabvalue} onChange={this._handleTabChange.bind(this)}>
               <Tab label="Histogram" />
               <Tab label="Violin Plot" />
               <Tab label="HL Violin Pie" />
               <Tab label="HS Violin Pie" />
             </Tabs>
+            <Typography variant="h6" color="inherit" className={classes.title}>
+              Analyze your image in HSL space: COLORANA
+            </Typography>
           </AppBar>
         </div>
         <main className={classes.mainContent}>
