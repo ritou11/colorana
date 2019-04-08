@@ -21,6 +21,7 @@ class HSLViolinPie extends Component {
       sqrt: false,
     };
     this.settings = _.merge(this.defaultSettings, props.settings);
+    if (!this.settings.imgPath) this.settings.innerR = 0;
   }
 
   componentDidMount() {
