@@ -19,7 +19,7 @@ const styles = {
     minHeight: '100vh',
     flexDirection: 'column',
   },
-  acutalContent: {
+  mainContent: {
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
@@ -29,9 +29,15 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   },
-  mainContent: {
+  chartContent: {
     flex: 1,
-    padding: '48px 36px 0',
+    padding: '48px 36px',
+    height: '100%',
+    display: 'table',
+  },
+  chartContainer: {
+    display: 'table-cell',
+    verticalAlign: 'middle',
   },
   right: {
     width: '400px',
@@ -73,20 +79,22 @@ class App extends Component {
         <div style={{ minHeight: '48px' }}>
           <AppBar>
             <Tabs value={this.state.tabvalue} onChange={this._handleTabChange.bind(this)}>
-              <Tab label="Item One" />
-              <Tab label="Item Two" />
-              <Tab label="Item Three" />
+              <Tab label="Histogram" />
+              <Tab label="Violin Plot" />
+              <Tab label="HL Violin Pie" />
+              <Tab label="HS Violin Pie" />
             </Tabs>
           </AppBar>
         </div>
-        <div className={classes.acutalContent}>
+        <main className={classes.mainContent}>
           <div className={classes.appContent}>
-            <main className={classes.mainContent}>
-              <Grid container alignContent='center' direction='column' justify='center' spacing={8}>
+            <div className={classes.chartContent}>
+              <Grid container className={classes.chartContainer}
+                alignContent='center' direction='column' justify='center' spacing={8}>
                 {this.state.tabvalue === 0 && <div>
                   <Grid item>
                     <HSLHistogram settings={{
-                      width: 600,
+                      width: 800,
                       height: 200,
                       xmin: 0,
                       xmax: 360,
@@ -94,7 +102,7 @@ class App extends Component {
                       color: 'red',
                     }} data={this.state.data}/>
                     <HSLHistogram settings={{
-                      width: 600,
+                      width: 800,
                       height: 200,
                       xmin: 0,
                       xmax: 1,
@@ -102,7 +110,7 @@ class App extends Component {
                       color: 'green',
                     }} data={this.state.data}/>
                     <HSLHistogram settings={{
-                      width: 600,
+                      width: 800,
                       height: 200,
                       xmin: 0,
                       xmax: 1,
@@ -114,15 +122,15 @@ class App extends Component {
                 {this.state.tabvalue === 1 && <div>
                   <Grid item>
                     <HSLViolin settings={{
-                      width: 600,
-                      height: 200,
+                      width: 800,
+                      height: 300,
                       sqrt: false,
                       transitionOn: true,
                       select: 1,
                     }} data={this.state.data}/>
                     <HSLViolin settings={{
-                      width: 600,
-                      height: 200,
+                      width: 800,
+                      height: 300,
                       sqrt: true,
                       select: 2,
                     }} data={this.state.data}/>
@@ -131,15 +139,19 @@ class App extends Component {
                 {this.state.tabvalue === 2 && <div>
                   <Grid item>
                     <HSLViolinPie settings={{
-                      outerR: 200,
-                      innerR: 100,
+                      outerR: 300,
+                      innerR: 150,
                       // imgPath: 'example.png',
                       sqrt: true,
                       select: 2,
                     }} data={this.state.data}/>
+                  </Grid>
+                </div>}
+                {this.state.tabvalue === 3 && <div>
+                  <Grid item>
                     <HSLViolinPie settings={{
-                      outerR: 200,
-                      innerR: 100,
+                      outerR: 300,
+                      innerR: 150,
                       imgPath: 'example.png',
                       sqrt: true,
                       select: 1,
@@ -147,14 +159,14 @@ class App extends Component {
                   </Grid>
                 </div>}
               </Grid>
-            </main>
+            </div>
           </div>
           <div className={classes.right}>
             <div className={classes.rightContent}>
               <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
             </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
