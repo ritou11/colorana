@@ -13,6 +13,7 @@ import HSLHistogram from './components/HSLHistogram';
 import HSLViolin from './components/HSLViolin';
 import HSLViolinPie from './components/HSLViolinPie';
 import UploadField from './components/UploadField';
+import HSLSettings from './components/HSLSettings';
 
 const styles = {
   root: {
@@ -71,6 +72,8 @@ class App extends Component {
       data: [],
       tabvalue: 0,
       imageSrc: 'example.png',
+      hsSettings: {},
+      hlSettings: {},
     };
   }
 
@@ -86,6 +89,11 @@ class App extends Component {
     this.setState({ tabvalue });
   }
 
+  handleStoreSettings = (select) => (settings) => {
+    const name = select === 1 ? 'hsSettings' : 'hlSettings';
+    this.setState({ [name]: settings });
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -94,7 +102,10 @@ class App extends Component {
         <CssBaseline />
         <div style={{ minHeight: '48px' }}>
           <AppBar className={classes.appBar}>
-            <Tabs value={this.state.tabvalue} onChange={this._handleTabChange.bind(this)}>
+            <Tabs value={this.state.tabvalue}
+              onChange={this._handleTabChange.bind(this)}
+              variant="scrollable"
+              scrollButtons="on">
               <Tab label="Histogram" />
               <Tab label="Violin Plot" />
               <Tab label="HL Violin Pie" />
@@ -140,14 +151,15 @@ class App extends Component {
                     <HSLViolin settings={{
                       width: 800,
                       height: 300,
-                      sqrt: false,
-                      transitionOn: true,
+                      sqrt: this.state.hsSettings.checkedZoom,
+                      transitionOn: this.state.hsSettings.checkedTrans,
                       select: 1,
                     }} data={this.state.data}/>
                     <HSLViolin settings={{
                       width: 800,
                       height: 300,
-                      sqrt: true,
+                      sqrt: this.state.hlSettings.checkedZoom,
+                      transitionOn: this.state.hlSettings.checkedTrans,
                       select: 2,
                     }} data={this.state.data}/>
                   </Grid>
@@ -183,6 +195,10 @@ class App extends Component {
                 storeImgData={this._handleStoreImgData.bind(this)} />
               <Divider />
               <UploadField storeImg={this._handleStoreImg.bind(this)}/>
+              <Divider />
+              <HSLSettings storeSettings={this.handleStoreSettings(1)}/>
+              <Divider />
+              <HSLSettings storeSettings={this.handleStoreSettings(2)}/>
             </div>
           </div>
         </main>
