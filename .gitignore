@@ -1,4 +1,6 @@
 secret.json
+# generated files
+public/help.html
 
 # dependencies
 /node_modules

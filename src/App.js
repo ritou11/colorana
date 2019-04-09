@@ -6,14 +6,22 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import './App.css';
+import Fab from '@material-ui/core/Fab';
+import HelpIcon from '@material-ui/icons/Help';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+
 import Canvas from './components/Canvas';
 import HSLHistogram from './components/HSLHistogram';
 import HSLViolin from './components/HSLViolin';
 import HSLViolinPie from './components/HSLViolinPie';
 import UploadField from './components/UploadField';
 import HSLSettings from './components/HSLSettings';
+import './App.css';
 
 const styles = {
   root: {
@@ -63,6 +71,17 @@ const styles = {
     marginRight: '32px',
     textAlign: 'right',
   },
+  fabdiv: {
+    position: 'fixed',
+    right: '20px',
+    bottom: '20px',
+  },
+  iframe: {
+    borderStyle: 'none',
+    width: '100%',
+    height: '100%',
+  },
+  diagPaper: { height: '100%' },
 };
 
 class App extends Component {
@@ -74,6 +93,7 @@ class App extends Component {
       imageSrc: 'example.png',
       hsSettings: {},
       hlSettings: {},
+      diagOpen: false,
     };
   }
 
@@ -93,6 +113,14 @@ class App extends Component {
     const name = select === 1 ? 'hsSettings' : 'hlSettings';
     this.setState({ [name]: settings });
   }
+
+  handleDiagClose = () => {
+    this.setState({ diagOpen: false });
+  }
+
+  handleDiagOpen = () => {
+    this.setState({ diagOpen: true });
+  };
 
   render() {
     const { classes } = this.props;
@@ -203,6 +231,30 @@ class App extends Component {
             </div>
           </div>
         </main>
+        <Dialog
+          open={this.state.diagOpen}
+          onClose={this.handleDiagClose}
+          scroll="paper"
+          fullWidth
+          classes={{ paper: classes.diagPaper }}
+          aria-labelledby="scroll-dialog-title"
+        >
+          <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+          <DialogContent>
+            <iframe src='help.html' className={classes.iframe}> </iframe>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleDiagClose} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <div className={classes.fabdiv}>
+          <Fab color="primary" aria-label="Add"
+            onClick={this.handleDiagOpen}>
+            <HelpIcon />
+          </Fab>
+        </div>
       </div>
     );
   }
