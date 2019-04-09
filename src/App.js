@@ -136,8 +136,8 @@ class App extends Component {
               scrollButtons="on">
               <Tab label="Histogram" />
               <Tab label="Violin Plot" />
-              <Tab label="HL Violin Pie" />
               <Tab label="HS Violin Pie" />
+              <Tab label="HL Violin Pie" />
             </Tabs>
             <Typography variant="h6" color="inherit" className={classes.title}>
               Analyze your image in HSL space: COLORANA
@@ -199,7 +199,7 @@ class App extends Component {
                       innerR: 150,
                       imgPath: this.state.hsSettings.checkedImg ? this.state.imageSrc : null,
                       sqrt: this.state.hsSettings.checkedZoom,
-                      select: 2,
+                      select: 1,
                     }} data={this.state.data}/>
                   </Grid>
                 </div>}
@@ -210,7 +210,7 @@ class App extends Component {
                       innerR: 150,
                       imgPath: this.state.hlSettings.checkedImg ? this.state.imageSrc : null,
                       sqrt: this.state.hlSettings.checkedZoom,
-                      select: 1,
+                      select: 2,
                     }} data={this.state.data}/>
                   </Grid>
                 </div>}
