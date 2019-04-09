@@ -21,6 +21,7 @@
 
     作业的成果Colorana托管在Netlify平台，地址为\url{https://color.nogeek.top}。由于前端的设计并非重点，因此该网站仅保证对Chrome的支持，且未对移动端进行针对性适配。本程序将在学期结束后以MIT协议开源。
 
+    前端呈现如\cref{fig:frontend}所示，其中左上的选项卡可选择可视化项目，右下的控制区可控制绘制行为，右上展现了当前分析的图片。本报告中的样例图片即如图中所示。
     \begin{figure}[htbp]
       \centering
       \includegraphics[width=0.9\linewidth]{frontend}
@@ -31,15 +32,62 @@
     \begin{figure}[htbp]
       \centering
       \includegraphics[width=0.9\linewidth]{histogram}
-      \caption{HSL直方图绘制}
+      \caption{HSL直方图}
       \label{fig:histogram}
     \end{figure}
+    在\cref{fig:histogram}中实现了对HSL三个通道的直方图绘制，并在横向按照坐标用渐变颜色填充（当某通道不为自变量时，选取典型值为[h=0, s=0.5, l=0.5]），从而获得更直观的视觉效果。
 
+    \paragraph{难点1} SVG中并不能定义HSL空间的插值函数，只能在RGBA空间实现渐变效果。该问题在其他各任务中同样存在。
+    \paragraph{解决方案1} 在SVG中设置多个RGB插值点（实际为10个），依次按比例在HSL空间进行渐变，从而模拟HSL空间的色彩渐变效果。
     \section{小提琴图绘制}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.9\linewidth]{violin}
+      \caption{HSL小提琴图}
+      \label{fig:violin}
+    \end{figure}
+
+    在\cref{fig:violin}中实现了对H-S及H-L的小提琴图绘制。可见，由于原图色彩偏暗，大部分色调的亮度都偏低，只有蓝色调亮度偏高，体现为原图中的远方石板路。同时蓝色调的饱和度偏低，而红色调饱和度偏高，体现为近处被夕阳照射的皮肤。
+
+    \paragraph{难点2} 小提琴图排列紧密，相邻小提琴可能产生重叠。
+    \paragraph{解决方案2} 在SVG中设置对每个色调分区建立<clippath>，并绑定到小提琴的<area>上。这个<clippath>的形状同坐标背景相间的栅格一致。
+
+    \paragraph{难点3} 为保证大小关系，同一张图上每个小提琴绘制时的参考最大值为全局最大值，因此小提琴的"尾巴"可能太细，部分小提琴可能很难看清。
+    \paragraph{解决方案3} 由于已经实现了clippath，我们可以有意识地让最大的小提琴溢出一部分，这样的溢出尽管损失了具体的大小信息，但"截断"的样式更能给人视觉冲击，同时还使得较小的部分显示清楚。
     \section{径向小提琴图绘制}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.5\linewidth]{hspie}
+      \caption{H-S径向小提琴图}
+      \label{fig:hspie}
+    \end{figure}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.5\linewidth]{hlpie}
+      \caption{H-L径向小提琴图}
+      \label{fig:hlpie}
+    \end{figure}
+
+    在\cref{fig:hspie,fig:hlpie}中分别实现了H-S通道和H-L通道的径向小提琴图绘制。在径向小提琴图中，我们展示的数据经过了一定的变换，从而增加了填充面积。
+
+    \paragraph{难点4} 即便经过解决方案3的处理，空白区域依然过大。
+    \paragraph{解决方案4} 对于小提琴图来说，必须保留的是各部分之间的大小关系。但是，具体的值大小未必需要精确，只要给用户的直观感受不变即可。因此，我们采用非线性函数变换的形式，降低最小值和最大值之间的对比，增大区域面积。此处选取的非线性函数为平方根函数。另外，作业例图在着色时似乎进行了截断，仅保留了较高亮度和饱和度的色彩。这种做法会使得数据的对应出现问题，传达的色彩信息将严重失真，本程序并未效仿。
+
+    \paragraph{难点5} 扇形<clippath>绑定困难。SVG的clip逻辑是在transform前进行绑定，而为了方便绘制，小提琴图都是先绘制后transform:rotate()的，这样就不能正确绑定并遮罩。
+    \paragraph{解决方案5} 将<clippath>反变换。
     \section{动画小提琴图绘制}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.9\linewidth]{trans}
+      \caption{动画小提琴图}
+      \label{fig:trans}
+    \end{figure}
 
+    \cref{fig:trans}展示了动画结束时的小提琴图，各小提琴在\cref{fig:violin}的基础上分别扩大了5倍宽度。由于pdf难以呈现动图，请访问\url{https://color.nogeek.top}，并在右下角分别开启Zoom开关，并切换到"VIOLIN PLOT"选项卡，即可观看动图。
 
+    这种呈现的效果要优于采用非线性变换的径向小提琴图，因为并未有信息失真，同时扩大后的图像更能让人了解图片的色彩分布。
+
+    在\url{https://color.nogeek.top}中，还实现了多种选项的排列组合（Zoom：是否非线性变换，Transition：是否开启动画，PieImage：是否在圆环中显示图片）。
 
     \label{applastpage}
     \newpage
