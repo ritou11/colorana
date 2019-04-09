@@ -169,8 +169,8 @@ class App extends Component {
                     <HSLViolinPie settings={{
                       outerR: 300,
                       innerR: 150,
-                      imgPath: this.state.imageSrc,
-                      sqrt: true,
+                      imgPath: this.state.hsSettings.checkedImg ? this.state.imageSrc : null,
+                      sqrt: this.state.hsSettings.checkedZoom,
                       select: 2,
                     }} data={this.state.data}/>
                   </Grid>
@@ -180,8 +180,8 @@ class App extends Component {
                     <HSLViolinPie settings={{
                       outerR: 300,
                       innerR: 150,
-                      imgPath: this.state.imageSrc,
-                      sqrt: true,
+                      imgPath: this.state.hlSettings.checkedImg ? this.state.imageSrc : null,
+                      sqrt: this.state.hlSettings.checkedZoom,
                       select: 1,
                     }} data={this.state.data}/>
                   </Grid>
@@ -196,9 +196,10 @@ class App extends Component {
               <Divider />
               <UploadField storeImg={this._handleStoreImg.bind(this)}/>
               <Divider />
-              <HSLSettings storeSettings={this.handleStoreSettings(1)}/>
+              <HSLSettings label='H-S Settings' storeSettings={this.handleStoreSettings(1)}/>
               <Divider />
-              <HSLSettings storeSettings={this.handleStoreSettings(2)}/>
+              <HSLSettings label='H-L Settings' storeSettings={this.handleStoreSettings(2)}/>
+              <Divider />
             </div>
           </div>
         </main>
