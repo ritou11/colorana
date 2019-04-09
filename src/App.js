@@ -239,9 +239,9 @@ class App extends Component {
           classes={{ paper: classes.diagPaper }}
           aria-labelledby="scroll-dialog-title"
         >
-          <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="scroll-dialog-title">README</DialogTitle>
           <DialogContent>
-            <iframe src='help.html' className={classes.iframe}> </iframe>
+            <iframe src='help.html' title='Readme' className={classes.iframe}> </iframe>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleDiagClose} color="primary">
