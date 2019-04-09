@@ -70,7 +70,12 @@ class App extends Component {
     this.state = {
       data: [],
       tabvalue: 0,
+      imageSrc: 'example.png',
     };
+  }
+
+  _handleStoreImg(imageSrc) {
+    this.setState({ imageSrc });
   }
 
   _handleStoreImgData(data) {
@@ -177,9 +182,10 @@ class App extends Component {
           </div>
           <div className={classes.right}>
             <div className={classes.rightContent}>
-              <Canvas width={400} height={300} src="example.png" storeImgData={this._handleStoreImgData.bind(this)} />
+              <Canvas width={400} height={300} src={this.state.imageSrc}
+                storeImgData={this._handleStoreImgData.bind(this)} />
               <Divider />
-              <UploadField />
+              <UploadField storeImg={this._handleStoreImg.bind(this)}/>
             </div>
           </div>
         </main>

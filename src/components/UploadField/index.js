@@ -25,7 +25,16 @@ class UploadField extends Component {
     filename: 'example.png',
   };
 
+  readImage(path, callback) {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(path);
+    fileReader.onload = (e) => {
+      callback(e.target.result);
+    };
+  }
+
   _handleFileChange({ target }) {
+    this.readImage(target.files[0], (img) => { this.props.storeImg(img); });
     this.setState({ filename: target.files[0].name });
   }
 
