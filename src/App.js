@@ -118,7 +118,6 @@ class App extends Component {
                       xmin: 0,
                       xmax: 360,
                       select: 0,
-                      color: 'red',
                     }} data={this.state.data}/>
                     <HSLHistogram settings={{
                       width: 800,
@@ -126,7 +125,6 @@ class App extends Component {
                       xmin: 0,
                       xmax: 1,
                       select: 1,
-                      color: 'green',
                     }} data={this.state.data}/>
                     <HSLHistogram settings={{
                       width: 800,
@@ -134,7 +132,6 @@ class App extends Component {
                       xmin: 0,
                       xmax: 1,
                       select: 2,
-                      color: 'blue',
                     }} data={this.state.data}/>
                   </Grid>
                 </div>}
@@ -160,7 +157,7 @@ class App extends Component {
                     <HSLViolinPie settings={{
                       outerR: 300,
                       innerR: 150,
-                      // imgPath: 'example.png',
+                      imgPath: this.state.imageSrc,
                       sqrt: true,
                       select: 2,
                     }} data={this.state.data}/>
@@ -171,7 +168,7 @@ class App extends Component {
                     <HSLViolinPie settings={{
                       outerR: 300,
                       innerR: 150,
-                      imgPath: 'example.png',
+                      imgPath: this.state.imageSrc,
                       sqrt: true,
                       select: 1,
                     }} data={this.state.data}/>

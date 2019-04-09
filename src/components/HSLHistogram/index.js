@@ -33,6 +33,7 @@ class HSLHistogram extends Component {
     }
     this.settings = _.merge(this.defaultSettings, this.props.settings);
     this.mainGroup.selectAll('*').remove();
+    this.axisGroup.selectAll('*').remove();
     this.drawChart();
   }
 
@@ -69,6 +70,17 @@ class HSLHistogram extends Component {
       .thresholds(xScale.ticks(sts.xticks));
     const bins = histogram(data);
     const maxY = _.max(_.map(bins, (b) => b.length));
+
+    // thought histogram use [x0, x1), we have to combine the last two bins to draw
+    const lenBins = bins.length;
+    if (lenBins > 1 && bins[lenBins - 1].x0 === bins[lenBins - 1].x1) {
+      const xb0 = bins[lenBins - 2].x0;
+      const xb1 = bins[lenBins - 2].x1;
+      bins[lenBins - 2] = _.concat(bins[lenBins - 2], bins[lenBins - 1]);
+      bins[lenBins - 2].x0 = xb0;
+      bins[lenBins - 2].x1 = xb1;
+      bins.pop();
+    }
 
     const yScale = d3.scaleLinear()
       .domain([0, maxY])
