@@ -12,7 +12,26 @@
     %\newpage
     \part{简答题回答}
     \section{小提琴图相关问答}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.8\linewidth]{ktviolin}
+      \caption{课堂上出现的小提琴图}
+      \label{fig:ktviolin}
+    \end{figure}
+    在第四讲第101页右侧，出现了小提琴图及变种，如\cref{fig:ktviolin}所示。
+
+    小提琴图主要用于显示数据分布及分布的概率密度，因此适用于对比某指标不同值下另一指标分布情况的场景。例如，全国各省份居民年龄的分布情况，就可以用小提琴图展示；不同类型的群聊，用户收入的分布情况，也很适合用小提琴图展示。
+
+    作为箱须图的变体图表，小提琴图可以展示有关数据分布的更多信息，而箱须图仅能展示大致的分布范围，而对分布本身没有细致刻画。
+
+    也就是说，小提琴图包含了更多的细节，这也是其缺点所在。由于细节较多，可能会包含误导信息，反而无法观测到主要的分布情况。
     \section{圆环设计相关问答}
+    更倾向于空心圆环，理由如下。
+    \begin{enumerate}
+      \item 空心圆环有展示原图的空间，在中心显示原图，可以更直观地呈现图片色彩的情况；
+      \item 即便不展示原图，空心圆环使得色彩（信息）从圆心处的拥挤解放出来，能更清晰地展示；
+      \item 最重要的是，类似于课堂上讲授的南丁格尔图表，圆形图表存在共有问题：采用角度编码，当离圆心越远时，呈现出的弧长越大，面积也越大，将使得外侧的区域更有优势。这在本例中，会使得大小比例发生变化，产生信息失真。如果不采用空心圆环，则圆心附近的小提琴图根本无法呈现；空心圆环一定程度上缓解了圆形图表带来的畸变问题。
+    \end{enumerate}
     \part{编程题目说明}
     \section{概述}
     本程序主体是基于D3.js（或称D3）开发的。选择D3，一方面是由于JavaScript广泛应用于前端设计，在"轻量时代"更适合开发移动编写的应用程序；另一方面则是考虑到后续各问的可视化任务高度定制化，故应采用较为底层的绘制工具。D3全称是Data-Driven Document，即"数据驱动的文档"，是一个用于数据可视化的JavaScript程序包，采用BSD-3开源协议托管于Github上。很多著名的JavaScript可视化工具，都是基于D3开发的。
@@ -91,8 +110,14 @@
 
     \label{applastpage}
     \newpage
-    \bibliography{report}
-    \bibliographystyle{unsrt}
+    \appendix
+    \section{参考说明}
+    \begin{enumerate}
+      \item D3入门参考：精通D3.j3(第2版)，吕之华. 电子工业出版社，北京，2017年。
+      \item D3入门参考：D3官方文档，\url{https://github.com/d3/d3/blob/master/API.md}。
+      \item 程序依赖：见package.json。
+      \item React相关参考：开源项目ballot，\url{https://github.com/b1f6c1c4/ballot}。
+    \end{enumerate}
 \iffalse
 \begin{itemize}[noitemsep,topsep=0pt]
 %no white space
